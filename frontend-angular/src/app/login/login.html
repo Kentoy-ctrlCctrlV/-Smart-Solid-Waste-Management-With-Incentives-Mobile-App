@@ -1,0 +1,85 @@
+<div class="page-shell">
+  <section class="login-wrap">
+    <div class="login-stage">
+      <section class="hero-copy login-visual-panel">
+        <div class="brand-lockup">
+          <img src="assets/ecoloop-logo-professional.svg" alt="EcoLoop logo" class="brand-logo">
+          <div class="brand-copy">
+            <p class="eyebrow">Smart Solid Waste Management With Incentives</p>
+            <h1>EcoLoop.</h1>
+          </div>
+        </div>
+        <p class="lede">
+          Track segregation performance, monitor collection routes, notify residents, and manage reward points from one connected dashboard.
+        </p>
+        <div class="login-wave login-wave-one"></div>
+        <div class="login-wave login-wave-two"></div>
+        <div class="login-wave login-wave-three"></div>
+        <div class="login-visual-footer">
+          <p class="muted">Secure access to the EcoLoop dashboard for waste management, collection, and rewards.</p>
+        </div>
+      </section>
+
+      <section class="login-side-panel">
+        <div class="login-card login-main-card">
+          <div class="card-topline">System Access</div>
+          <div class="login-logo-row">
+            <img src="assets/ecoloop-logo-professional.svg" alt="EcoLoop logo" class="login-logo">
+            <div>
+              <p class="eyebrow">EcoLoop Access</p>
+              <h2>Get started!</h2>
+            </div>
+          </div>
+          <p class="muted">Sign in to access the eco operations dashboard.</p>
+          <form (ngSubmit)="onLogin()" class="stack-form">
+            <label>
+              User name
+              <input type="text" [(ngModel)]="username" name="username" placeholder="Enter your user name or email" required>
+            </label>
+            <label>
+              Password
+              <input type="password" [(ngModel)]="password" name="password" placeholder="Enter your password" required>
+            </label>
+            <button type="submit" class="primary-btn login-submit-btn">Login</button>
+            <p *ngIf="loginError" class="error-text">{{ loginError }}</p>
+          </form>
+        </div>
+
+        <div class="login-card register-card">
+          <div class="card-topline">Resident Registration</div>
+          <h3>Create a resident account</h3>
+          <p class="muted">Residents get separate points, history, and notifications.</p>
+          <form (ngSubmit)="onRegister()" class="stack-form compact-form">
+            <label>
+              Full name
+              <input type="text" [(ngModel)]="registerName" name="registerName" placeholder="Enter your full name" maxlength="150" required>
+            </label>
+            <label>
+              Age
+              <input type="number" [(ngModel)]="registerAge" name="registerAge" placeholder="Enter your age" min="1" max="120" step="1" required>
+            </label>
+            <label>
+              Address
+              <input type="text" [(ngModel)]="registerAddress" name="registerAddress" placeholder="Enter your address" maxlength="255" required>
+            </label>
+            <label>
+              Contact number
+              <input type="tel" [(ngModel)]="registerPhone" name="registerPhone" placeholder="Enter your phone number" maxlength="50" required>
+            </label>
+            <label>
+              Username
+              <input type="text" [(ngModel)]="registerUsername" name="registerUsername" placeholder="3-100 letters, numbers, . _ or -" minlength="3" maxlength="100" pattern="[a-zA-Z0-9_.-]{3,100}" required>
+            </label>
+            <label>
+              Password
+              <input type="password" [(ngModel)]="registerPassword" name="registerPassword" placeholder="At least 12 characters" minlength="12" maxlength="256" required>
+            </label>
+            <button type="submit" class="primary-btn">Create Resident Account</button>
+            <p *ngIf="registerMessage" class="success-text">{{ registerMessage }}</p>
+            <p *ngIf="registerError" class="error-text">{{ registerError }}</p>
+          </form>
+        </div>
+      </section>
+    </div>
+  </section>
+</div>

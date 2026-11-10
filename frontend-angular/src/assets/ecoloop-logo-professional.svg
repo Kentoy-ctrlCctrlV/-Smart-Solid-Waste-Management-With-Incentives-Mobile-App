@@ -1,0 +1,29 @@
+<svg width="320" height="320" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="ecoRing" x1="72" y1="62" x2="246" y2="252" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2F8F57"/>
+      <stop offset="1" stop-color="#164E35"/>
+    </linearGradient>
+    <linearGradient id="ecoLeaf" x1="126" y1="96" x2="196" y2="196" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#98C96A"/>
+      <stop offset="1" stop-color="#2F8F57"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="20" y="20" width="280" height="280" rx="68" fill="#FFFAF2"/>
+  <circle cx="160" cy="160" r="104" fill="#F2F8EE"/>
+  <circle cx="160" cy="160" r="86" stroke="url(#ecoRing)" stroke-width="18"/>
+
+  <path d="M225 114L239 139C244 148 241 160 232 165L191 189C182 194 171 191 165 183L151 159C145 150 148 138 157 133L198 109C207 104 219 106 225 114Z" fill="url(#ecoRing)"/>
+  <path d="M95 117L136 94C145 89 156 92 162 100L176 124C182 133 179 145 170 150L129 174C120 179 109 176 103 167L89 143C83 134 86 122 95 117Z" fill="url(#ecoRing)"/>
+  <path d="M127 206L86 182C77 177 74 165 80 156L94 132C100 123 112 120 121 125L162 148C171 153 174 165 169 174L155 198C149 207 136 211 127 206Z" fill="url(#ecoRing)"/>
+
+  <path d="M116 115C133 99 154 91 177 91C196 91 213 97 227 109" stroke="#CFE4BE" stroke-width="8" stroke-linecap="round"/>
+  <path d="M96 183C104 201 118 216 136 225C153 233 172 235 190 230" stroke="#CFE4BE" stroke-width="8" stroke-linecap="round"/>
+
+  <path d="M160 108C180 108 196 124 196 145C196 171 179 191 160 211C141 191 124 171 124 145C124 124 140 108 160 108Z" fill="#FFFDF8"/>
+  <path d="M160 123C173 123 184 134 184 148C184 164 173 180 160 193C147 180 136 164 136 148C136 134 147 123 160 123Z" fill="url(#ecoLeaf)"/>
+  <path d="M160 128V188" stroke="#FFFDF8" stroke-width="6" stroke-linecap="round"/>
+  <path d="M160 151C169 145 175 137 179 128" stroke="#FFFDF8" stroke-width="5" stroke-linecap="round"/>
+  <path d="M160 166C151 160 145 152 141 143" stroke="#FFFDF8" stroke-width="5" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoLoop Smart Solid Waste Management</title>
+  <link rel="stylesheet" href="style.css?v=14">
+</head>
+<body>
+  <div class="page-shell">
+    <section class="login-wrap" id="loginPage">
+      <div class="login-stage">
+        <section class="hero-copy login-visual-panel">
+          <div class="brand-lockup">
+            <img src="assets/ecoloop-logo-professional.svg" alt="EcoLoop logo" class="brand-logo">
+            <div class="brand-copy">
+              <p class="eyebrow">Smart Solid Waste Management With Incentives</p>
+              <h1>EcoLoop.</h1>
+            </div>
+          </div>
+          <p class="lede">
+            Track segregation performance, monitor collection routes, notify residents, and manage reward points from one connected dashboard.
+          </p>
+          <div class="login-wave login-wave-one"></div>
+          <div class="login-wave login-wave-two"></div>
+          <div class="login-wave login-wave-three"></div>
+          <div class="login-visual-footer">
+            <p class="muted"><strong>Founder:</strong> Vincent Miles Moring</p>
+            <p class="muted"><strong>Development Team / System Developers:</strong> Daisy Olalo Rementizo, Delord Pajo, Jeson Tabor</p>
+          </div>
+        </section>
+
+        <section class="login-side-panel">
+          <div class="login-card login-main-card">
+            <div class="card-topline">System Access</div>
+            <div class="login-logo-row">
+              <img src="assets/ecoloop-logo-professional.svg" alt="EcoLoop logo" class="login-logo">
+              <div>
+                <p class="eyebrow">EcoLoop Access</p>
+                <h2>Get started!</h2>
+              </div>
+            </div>
+            <p class="muted">Sign in to access the eco operations dashboard.</p>
+            <form id="loginForm" class="stack-form">
+              <label>
+                User name
+                <input type="text" id="username" placeholder="Enter your user name or email" required>
+              </label>
+              <label>
+                Password
+                <input type="password" id="password" placeholder="Enter your password" required>
+              </label>
+              <button type="submit" class="primary-btn login-submit-btn">Login</button>
+              <p id="loginError" class="error-text"></p>
+            </form>
+          </div>
+
+          <div class="login-card register-card">
+            <div class="card-topline">Resident Registration</div>
+            <h3>Create a resident account</h3>
+            <p class="muted">Residents get separate points, history, and notifications.</p>
+            <form id="registerForm" class="stack-form compact-form">
+              <label>
+                Full name
+                <input type="text" id="registerName" placeholder="Enter your full name" required>
+              </label>
+              <label>
+                Barangay / location
+                <input type="text" id="registerBarangay" value="Katipunan, Villanueva, Misamis Oriental" required>
+              </label>
+              <label>
+                Username
+                <input type="text" id="registerUsername" placeholder="Choose a username" required>
+              </label>
+              <label>
+                Password
+                <input type="password" id="registerPassword" placeholder="Create a password" required>
+              </label>
+              <button type="submit" class="primary-btn">Create Resident Account</button>
+              <p id="registerMessage" class="success-text"></p>
+              <p id="registerError" class="error-text"></p>
+            </form>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <main id="app" class="app-shell hidden">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-head">
+          <button id="sidebarCloseBtn" class="sidebar-toggle ghost-btn" type="button" aria-label="Close menu">Close</button>
+        </div>
+        <div class="sidebar-brand">
+          <div class="sidebar-mini-brand">
+            <img src="assets/ecoloop-logo-professional.svg" alt="EcoLoop logo" class="sidebar-logo">
+            <span>EcoLoop</span>
+          </div>
+          <p class="eyebrow">EcoLoop Hub</p>
+          <h2 class="sidebar-title">Community Waste Control Center</h2>
+        </div>
+        <nav class="nav-list">
+          <button class="nav-item active" data-view="overview">Overview</button>
+          <button class="nav-item" data-view="submissions">Waste Logs</button>
+          <button class="nav-item" data-view="pickups">Collection</button>
+          <button class="nav-item" data-view="notifications">Notifications</button>
+          <button class="nav-item" data-view="rewards">Incentives</button>
+          <button class="nav-item" data-view="analytics">Analytics</button>
+          <button class="nav-item" data-view="users">Users</button>
+        </nav>
+        <div class="sidebar-footer">
+          <p><strong>Founder:</strong> Vincent Miles Moring</p>
+          <p><strong>Development Team / System Developers:</strong> Daisy Olalo Rementizo, Delord Pajo, Jeson Tabor</p>
+          <p id="sidebarUser"></p>
+          <button id="logoutBtn" class="ghost-btn">Log Out</button>
+        </div>
+      </aside>
+
+      <section class="content-area">
+        <header class="topbar">
+          <div class="topbar-title-group">
+            <button id="sidebarToggleBtn" class="sidebar-toggle ghost-btn" type="button" aria-label="Open menu">Menu</button>
+            <div>
+              <p class="eyebrow">Live operations</p>
+              <h1 id="welcomeTitle">Welcome back</h1>
+            </div>
+          </div>
+          <p id="appMessage" class="success-text topbar-message"></p>
+          <div class="user-pill">
+            <span id="roleBadge"></span>
+            <strong id="pointBalance">0 pts</strong>
+          </div>
+        </header>
+
+        <section class="view active" id="overviewView">
+          <section class="tutorial-panel dashboard-tutorial">
+            <div class="tutorial-copy">
+              <p class="eyebrow">Segregation Tutorial</p>
+              <h2>Learn how to segregate waste correctly before using the dashboard tools.</h2>
+              <p class="muted">
+                Watch this tutorial first, then follow the guide below when logging biodegradable, recyclable, residual, hazardous, and electronic waste.
+              </p>
+              <div class="tutorial-steps">
+                <div class="tutorial-step">
+                  <strong>1. Separate by waste type</strong>
+                  <p>Keep biodegradable, recyclable, residual, hazardous, and electronic waste in different containers.</p>
+                </div>
+                <div class="tutorial-step">
+                  <strong>2. Clean recyclables</strong>
+                  <p>Rinse bottles, cans, and plastic packaging before placing them in the recyclable group.</p>
+                </div>
+                <div class="tutorial-step">
+                  <strong>3. Handle special waste carefully</strong>
+                  <p>Store batteries, bulbs, and electronic waste safely and submit them as hazardous or electronic waste only.</p>
+                </div>
+              </div>
+            </div>
+            <div class="tutorial-video-card">
+              <video class="tutorial-video" controls preload="metadata">
+                <source src="assets/segregation-tutorial.mp4" type="video/mp4">
+                Your browser does not support the tutorial video.
+              </video>
+              <p class="video-credit">
+                Tutorial source credit:
+                <a href="https://www.youtube.com/watch?v=0ZiD_Lb3Tm0" target="_blank" rel="noopener noreferrer">
+                  Why Waste Segregation is Important | Waste Management | The Planet Voice
+                </a>
+              </p>
+            </div>
+          </section>
+
+          <div class="metric-grid" id="metricsGrid"></div>
+          <article class="panel resident-notice-panel" id="residentNoticePanel">
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">Resident alerts</p>
+                <h3>Collector arrival and collection notifications</h3>
+              </div>
+            </div>
+            <div id="residentNotificationsPreview" class="notification-list"></div>
+          </article>
+          <div class="two-column">
+            <article class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="section-kicker">Resident action</p>
+                  <h3>Log segregated waste</h3>
+                </div>
+              </div>
+              <form id="wasteForm" class="grid-form">
+                <label>
+                  Waste type
+                  <select id="wasteType" required>
+                    <option value="biodegradable">Biodegradable</option>
+                    <option value="recyclable">Recyclable</option>
+                    <option value="residual">Residual</option>
+                    <option value="hazardous">Hazardous</option>
+                    <option value="electronic">Electronic</option>
+                  </select>
+                </label>
+                <label>
+                  Weight (kg)
+                  <input type="number" id="weightKg" min="0.1" step="0.1" required>
+                </label>
+                <label>
+                  Pickup location
+                  <input type="text" id="wasteLocation" placeholder="Purok / street" required>
+                </label>
+                <label>
+                  Segregation score
+                  <input type="number" id="segregationScore" min="1" max="100" value="90" required>
+                </label>
+                <label class="full-span">
+                  Notes
+                  <textarea id="wasteNotes" rows="3" placeholder="Optional notes about the submission"></textarea>
+                </label>
+                <button type="submit" class="primary-btn">Submit Waste Entry</button>
+              </form>
+            </article>
+
+            <article class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="section-kicker">Live feed</p>
+                  <h3>Recent activities</h3>
+                </div>
+              </div>
+              <div id="activityFeed" class="timeline"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" id="submissionsView">
+          <div class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="section-kicker">Waste submissions</p>
+                  <h3>Segregation records and collection status</h3>
+                </div>
+              </div>
+            <p class="muted">Only administrator and collector accounts can use the `Notify arriving` and `Collected` buttons.</p>
+              <div id="submissionsTable" class="table-list"></div>
+            </div>
+          </section>
+
+        <section class="view" id="pickupsView">
+          <div class="two-column">
+            <article class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="section-kicker">Route planner</p>
+                  <h3>Schedule a pickup run</h3>
+                </div>
+              </div>
+              <form id="pickupForm" class="grid-form">
+                <label>
+                  Route name
+                  <input type="text" id="routeName" required>
+                </label>
+                <label>
+                  Scheduled date
+                  <input type="date" id="scheduledDate" required>
+                </label>
+                <label>
+                  Truck / vehicle
+                  <input type="text" id="truck" required>
+                </label>
+                <label>
+                  Zone
+                  <input type="text" id="pickupZone" required>
+                </label>
+                <label>
+                  Forecast load (kg)
+                  <input type="number" id="loadKg" min="0" required>
+                </label>
+                <label>
+                  Planned stops
+                  <input type="number" id="stops" min="1" required>
+                </label>
+                <button type="submit" class="primary-btn">Create Pickup Schedule</button>
+              </form>
+            </article>
+
+            <article class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="section-kicker">Collection operations</p>
+                  <h3>Route status board</h3>
+                </div>
+              </div>
+              <div id="pickupList" class="card-list"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" id="rewardsView">
+          <div class="two-column rewards-layout">
+            <article class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="section-kicker">Reward center</p>
+                  <h3>Redeem incentives using eco points</h3>
+                </div>
+              </div>
+              <div id="rewardGrid" class="reward-grid"></div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="section-kicker">Claim history</p>
+                  <h3>Recent redemptions</h3>
+                </div>
+              </div>
+              <div id="redemptionList" class="table-list"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" id="notificationsView">
+          <div class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">Notification center</p>
+                <h3>Your latest updates</h3>
+              </div>
+            </div>
+            <div id="notificationList" class="notification-list"></div>
+          </div>
+        </section>
+
+        <section class="view" id="analyticsView">
+          <div class="two-column">
+            <article class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="section-kicker">Waste profile</p>
+                  <h3>Waste by type</h3>
+                </div>
+              </div>
+              <div id="wasteChart" class="chart-bars"></div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="section-kicker">Leaderboard</p>
+                  <h3>Top contributors by points</h3>
+                </div>
+              </div>
+              <div id="leaderboard" class="leaderboard"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" id="usersView">
+          <div class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">System users</p>
+                <h3>Resident accounts, points, and authority levels</h3>
+              </div>
+            </div>
+            <div id="usersList" class="table-list"></div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js?v=7"></script>
+</body>
+</html>

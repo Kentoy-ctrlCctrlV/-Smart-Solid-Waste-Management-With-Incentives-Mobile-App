@@ -1,0 +1,626 @@
+<main class="loading-screen" *ngIf="isLoading" role="status" aria-live="polite">
+  <div class="loading-spinner" aria-hidden="true"></div>
+  <p>Loading your EcoLoop dashboard...</p>
+</main>
+
+<main class="load-error-screen" *ngIf="!isLoading && !currentUser">
+  <img src="assets/ecoloop-logo-professional.svg" alt="" class="load-error-logo">
+  <h1>EcoLoop is temporarily unavailable</h1>
+  <p>{{ loadError || 'Your account session could not be loaded.' }}</p>
+  <div class="action-row">
+    <button class="primary-btn" type="button" (click)="retryLoad()">Try again</button>
+    <button class="ghost-btn" type="button" routerLink="/login">Return to sign in</button>
+  </div>
+</main>
+
+<main class="app-shell" *ngIf="currentUser as user">
+  <button
+    *ngIf="sidebarOpen"
+    class="sidebar-backdrop"
+    type="button"
+    aria-label="Close navigation menu"
+    (click)="toggleSidebar()">
+  </button>
+  <aside class="sidebar" [class.sidebar-open]="sidebarOpen">
+    <div class="sidebar-head">
+      <button class="sidebar-toggle ghost-btn" type="button" (click)="toggleSidebar()" aria-label="Close menu">Close</button>
+    </div>
+
+    <div class="sidebar-brand">
+      <div class="sidebar-mini-brand">
+        <img src="assets/ecoloop-logo-professional.svg" alt="EcoLoop logo" class="sidebar-logo">
+        <span>EcoLoop</span>
+      </div>
+      <p class="eyebrow">EcoLoop Hub</p>
+      <h2 class="sidebar-title">Community Waste Control Center</h2>
+    </div>
+
+    <nav class="nav-list">
+      <ng-container *ngFor="let item of navItems">
+        <button
+          *ngIf="allowedViews.includes(item.id)"
+          class="nav-item"
+          type="button"
+          [class.active]="activeView === item.id"
+          (click)="setView(item.id)">
+          {{ item.label }}
+        </button>
+      </ng-container>
+    </nav>
+
+    <div class="sidebar-footer">
+      <p><strong>Founder:</strong> Vincent Miles Moring</p>
+      <p><strong>Development Team / System Developers:</strong> Daisy Olalo Rementizo, Delord Pajo, Jeson Tabor</p>
+      <p>{{ user.name }} - {{ user.barangay }}</p>
+      <p *ngIf="user.age">Age: {{ user.age }}</p>
+      <p *ngIf="user.address">Address: {{ user.address }}</p>
+      <p *ngIf="user.phoneNumber">Phone: {{ user.phoneNumber }}</p>
+      <button class="ghost-btn" type="button" (click)="logout()">Log Out</button>
+    </div>
+  </aside>
+
+  <section class="content-area">
+    <header class="topbar">
+      <div class="topbar-title-group">
+        <button class="sidebar-toggle ghost-btn" type="button" (click)="toggleSidebar()" aria-label="Open menu">Menu</button>
+        <div>
+          <p class="eyebrow">Live operations</p>
+          <h1>{{ user.name }}'s smart waste dashboard</h1>
+        </div>
+      </div>
+
+      <p class="success-text topbar-message" *ngIf="appMessage">{{ appMessage }}</p>
+      <div class="topbar-error" *ngIf="loadError">
+        <p class="error-text">{{ loadError }}</p>
+        <button class="ghost-inline-btn" type="button" (click)="retryLoad()">Retry</button>
+      </div>
+
+      <div class="profile-circle">
+        <div class="profile-avatar">{{ getInitials(user.name) }}</div>
+        <div class="profile-info">
+          <div class="profile-name">{{ user.name }}</div>
+          <div class="profile-role">{{ user.role }}</div>
+        </div>
+      </div>
+
+      <div class="user-pill">
+        <span class="role-badge">{{ user.role }}</span>
+        <strong>{{ user.points }} pts</strong>
+      </div>
+    </header>
+
+    <section class="dashboard-hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Sustainable operations</p>
+        <h2>Welcome back, {{ firstName }}.</h2>
+        <p class="hero-text">
+          Track waste submissions, coordinate collection routes, and keep your community on track with powerful eco tools.
+        </p>
+      </div>
+
+      <div class="hero-widgets">
+        <article class="hero-card">
+          <p>Total waste collected</p>
+          <strong>{{ data?.analytics?.totals?.totalWasteKg || 0 }} kg</strong>
+        </article>
+        <article class="hero-card">
+          <p>Pending collections</p>
+          <strong>{{ data?.analytics?.totals?.pendingPickups || 0 }}</strong>
+        </article>
+        <article class="hero-card">
+          <p>Your eco points</p>
+          <strong>{{ user.points || 0 }} pts</strong>
+        </article>
+      </div>
+    </section>
+
+    <section class="view" [class.active]="activeView === 'overview'">
+      <section class="tutorial-panel dashboard-tutorial">
+        <div class="tutorial-copy">
+          <p class="eyebrow">Segregation Tutorial</p>
+          <h2>Learn how to segregate waste correctly before using the dashboard tools.</h2>
+          <p class="muted">
+            Watch this tutorial first, then follow the guide below when logging biodegradable, recyclable, residual, hazardous, and electronic waste.
+          </p>
+          <div class="tutorial-steps">
+            <div class="tutorial-step">
+              <strong>1. Separate by waste type</strong>
+              <p>Keep biodegradable, recyclable, residual, hazardous, and electronic waste in different containers.</p>
+            </div>
+            <div class="tutorial-step">
+              <strong>2. Clean recyclables</strong>
+              <p>Rinse bottles, cans, and plastic packaging before placing them in the recyclable group.</p>
+            </div>
+            <div class="tutorial-step">
+              <strong>3. Handle special waste carefully</strong>
+              <p>Store batteries, bulbs, and electronic waste safely and submit them as hazardous or electronic waste only.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="tutorial-video-card">
+          <video class="tutorial-video" controls preload="none">
+            <source src="assets/segregation-tutorial.mp4" type="video/mp4">
+            Your browser does not support the tutorial video.
+          </video>
+          <p class="video-credit">
+            Tutorial source credit:
+            <a href="https://www.youtube.com/watch?v=0ZiD_Lb3Tm0" target="_blank" rel="noopener noreferrer">
+              Why Waste Segregation is Important | Waste Management | The Planet Voice
+            </a>
+          </p>
+        </div>
+      </section>
+
+      <div class="metric-grid">
+        <article class="metric-card" *ngFor="let metric of metrics">
+          <p>{{ metric.label }}</p>
+          <strong>{{ metric.value }}</strong>
+        </article>
+      </div>
+
+      <article class="panel resident-notice-panel" *ngIf="isResident">
+        <div class="panel-heading">
+          <div>
+            <p class="section-kicker">Resident alerts</p>
+            <h3>Collector arrival and collection notifications</h3>
+          </div>
+        </div>
+        <div class="notification-list" *ngIf="notificationPreview.length; else noResidentAlerts">
+          <article class="notification-card" *ngFor="let notification of notificationPreview" [class.unread]="!notification.read">
+            <div class="row-top">
+              <strong>{{ notification.title }}</strong>
+              <span class="status-chip" [class.warn]="notification.type === 'Arrival'">{{ notification.type }}</span>
+            </div>
+            <p>{{ notification.message }}</p>
+            <p class="muted">{{ formatDateTime(notification.createdAt) }}</p>
+          </article>
+        </div>
+        <ng-template #noResidentAlerts>
+          <article class="data-row"><p>No resident alerts yet.</p></article>
+        </ng-template>
+      </article>
+
+      <div class="two-column">
+        <article class="panel" *ngIf="isResident">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">Resident action</p>
+              <h3>Log segregated waste</h3>
+            </div>
+          </div>
+
+          <form class="grid-form" (ngSubmit)="submitWaste()">
+            <label>
+              Waste type
+              <select [(ngModel)]="wasteForm.wasteType" name="wasteType" required>
+                <option *ngFor="let wasteType of wasteTypes" [value]="wasteType">{{ titleCase(wasteType) }}</option>
+              </select>
+            </label>
+            <label>
+              Weight (kg)
+              <input type="number" min="0.1" step="0.1" [(ngModel)]="wasteForm.weightKg" name="weightKg" required>
+            </label>
+            <label>
+              Pickup location
+              <input type="text" [(ngModel)]="wasteForm.location" name="wasteLocation" placeholder="Purok / street" required>
+            </label>
+            <label>
+              Segregation score
+              <input type="number" min="1" max="100" [(ngModel)]="wasteForm.segregationScore" name="segregationScore" required>
+            </label>
+            <label class="full-span">
+              Notes
+              <textarea rows="3" [(ngModel)]="wasteForm.notes" name="wasteNotes" placeholder="Optional notes about the submission"></textarea>
+            </label>
+            <button type="submit" class="primary-btn">Submit Waste Entry</button>
+          </form>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">Live feed</p>
+              <h3>Recent activities</h3>
+            </div>
+          </div>
+          <div class="timeline" *ngIf="activities.length; else noActivities">
+            <article class="timeline-item" *ngFor="let activity of activities">
+              <div class="row-top">
+                <strong>{{ activity.type }}</strong>
+                <span class="status-chip">{{ formatDateTime(activity.createdAt) }}</span>
+              </div>
+              <p>{{ activity.actor }}</p>
+              <p class="muted">{{ activity.detail }}</p>
+            </article>
+          </div>
+          <ng-template #noActivities>
+            <article class="data-row"><p>No activities yet.</p></article>
+          </ng-template>
+        </article>
+      </div>
+    </section>
+
+    <section class="view" [class.active]="activeView === 'profile'">
+      <div class="profile-grid">
+        <article class="panel profile-hero-card">
+          <div class="profile-cover"></div>
+          <div class="profile-main">
+            <div class="profile-avatar">{{ getUserInitials(user) }}</div>
+            <div>
+              <p class="section-kicker">Account profile</p>
+              <h2>{{ user.name }}</h2>
+              <p class="muted">&#64;{{ user.username }} - {{ user.barangay }}</p>
+            </div>
+          </div>
+
+          <div class="profile-badge-row">
+            <span class="authority-badge">{{ user.role }}</span>
+            <span class="status-chip">{{ currentAuthority.label }}</span>
+          </div>
+
+          <p class="profile-summary">{{ currentAuthority.description }}</p>
+        </article>
+
+        <article class="panel authority-card">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">Authority</p>
+              <h3>What this account can do</h3>
+            </div>
+          </div>
+          <div class="authority-list">
+            <div class="authority-item" *ngFor="let permission of currentAuthority.permissions">
+              <span class="check-dot">✓</span>
+              <p>{{ permission }}</p>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="profile-stat-grid">
+        <article class="profile-stat-card" *ngFor="let stat of currentProfileStats">
+          <p>{{ stat.label }}</p>
+          <strong>{{ stat.value }}</strong>
+        </article>
+      </div>
+
+      <div class="two-column">
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">Identity</p>
+              <h3>Account information</h3>
+            </div>
+          </div>
+          <div class="profile-detail-list">
+            <div>
+              <span>Full name</span>
+              <strong>{{ user.name }}</strong>
+            </div>
+            <div>
+              <span>Username</span>
+              <strong>&#64;{{ user.username }}</strong>
+            </div>
+            <div>
+              <span>Role</span>
+              <strong>{{ user.role }}</strong>
+            </div>
+            <div>
+              <span>Barangay / location</span>
+              <strong>{{ user.barangay }}</strong>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">Access</p>
+              <h3>Dashboard areas</h3>
+            </div>
+          </div>
+          <div class="access-chip-list">
+            <span class="access-chip" *ngFor="let item of navItems" [class.enabled]="allowedViews.includes(item.id)">
+              {{ item.label }}
+            </span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="view" [class.active]="activeView === 'submissions'">
+      <div class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="section-kicker">Waste submissions</p>
+            <h3>Segregation records and collection status</h3>
+          </div>
+        </div>
+        <p class="muted">Only administrator and collector accounts can use the Notify arriving and Collected buttons.</p>
+
+        <div class="table-list" *ngIf="visibleSubmissions.length; else noSubmissions">
+          <article class="data-row" *ngFor="let submission of visibleSubmissions">
+            <div class="row-top">
+              <strong>{{ submission.residentName }}</strong>
+              <span class="status-chip" [ngClass]="getStatusTone(submission.status)">{{ submission.status }}</span>
+            </div>
+            <div class="row-meta">
+              <p>{{ titleCase(submission.wasteType) }} - {{ submission.weightKg }} kg - {{ submission.pointsEarned }} pts</p>
+              <p>{{ submission.location }}</p>
+            </div>
+            <p class="muted">Segregation score: {{ submission.segregationScore }} - {{ formatDateTime(submission.submittedAt) }}</p>
+            <p>{{ submission.notes || 'No notes provided.' }}</p>
+            <div class="action-row" *ngIf="canReview">
+              <button class="status-btn" type="button" (click)="notifyArrival(submission)">Notify arriving</button>
+              <button class="status-btn" type="button" (click)="updateSubmissionStatus(submission, 'Collected')">Collected</button>
+            </div>
+          </article>
+        </div>
+        <ng-template #noSubmissions>
+          <article class="data-row"><p>No waste submissions yet.</p></article>
+        </ng-template>
+      </div>
+    </section>
+
+    <section class="view" [class.active]="activeView === 'pickups'">
+      <div class="two-column">
+        <article class="panel" *ngIf="canReview">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">Route planner</p>
+              <h3>Schedule a pickup run</h3>
+            </div>
+          </div>
+
+          <form class="grid-form" (ngSubmit)="createPickup()">
+            <label>
+              Route name
+              <input type="text" [(ngModel)]="pickupForm.routeName" name="routeName" required>
+            </label>
+            <label>
+              Scheduled date
+              <input type="date" [(ngModel)]="pickupForm.scheduledDate" name="scheduledDate" required>
+            </label>
+            <label>
+              Truck / vehicle
+              <input type="text" [(ngModel)]="pickupForm.truck" name="truck" required>
+            </label>
+            <label>
+              Zone
+              <input type="text" [(ngModel)]="pickupForm.zone" name="pickupZone" required>
+            </label>
+            <label>
+              Forecast load (kg)
+              <input type="number" min="0" [(ngModel)]="pickupForm.loadKg" name="loadKg" required>
+            </label>
+            <label>
+              Planned stops
+              <input type="number" min="1" [(ngModel)]="pickupForm.stops" name="stops" required>
+            </label>
+            <button type="submit" class="primary-btn">Create Pickup Schedule</button>
+          </form>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">Collection operations</p>
+              <h3>Route status board</h3>
+            </div>
+          </div>
+
+          <div class="card-list" *ngIf="visiblePickups.length; else noPickups">
+            <article class="pickup-card" *ngFor="let pickup of visiblePickups">
+              <div class="row-top">
+                <strong>{{ pickup.routeName }}</strong>
+                <span class="status-chip" [ngClass]="getStatusTone(pickup.status)">{{ pickup.status }}</span>
+              </div>
+              <div class="row-meta">
+                <p>{{ pickup.zone }} - {{ pickup.truck }}</p>
+                <p>{{ pickup.collectorName }}</p>
+              </div>
+              <div class="row-meta">
+                <p>{{ pickup.loadKg }} kg forecast</p>
+                <p>{{ pickup.stops }} stops - {{ pickup.scheduledDate }}</p>
+              </div>
+              <div class="action-row" *ngIf="canReview">
+                <button class="status-btn" type="button" (click)="updatePickupStatus(pickup, 'In progress')">Start route</button>
+                <button class="status-btn" type="button" (click)="updatePickupStatus(pickup, 'Completed')">Complete route</button>
+              </div>
+            </article>
+          </div>
+          <ng-template #noPickups>
+            <article class="data-row"><p>No pickup routes yet.</p></article>
+          </ng-template>
+        </article>
+      </div>
+    </section>
+
+    <section class="view" [class.active]="activeView === 'notifications'">
+      <div class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="section-kicker">Notification center</p>
+            <h3>Your latest updates</h3>
+          </div>
+        </div>
+
+        <div class="notification-list" *ngIf="userNotifications.length; else noNotifications">
+          <article class="notification-card" *ngFor="let notification of userNotifications" [class.unread]="!notification.read">
+            <div class="row-top">
+              <strong>{{ notification.title }}</strong>
+              <span class="status-chip" [class.warn]="notification.type === 'Arrival'">{{ notification.type }}</span>
+            </div>
+            <p>{{ notification.message }}</p>
+            <div class="row-meta">
+              <p>{{ formatDateTime(notification.createdAt) }}</p>
+              <p class="muted" *ngIf="notification.read">Read</p>
+              <button
+                class="ghost-inline-btn"
+                type="button"
+                *ngIf="!notification.read"
+                (click)="markNotificationRead(notification)">
+                Mark as read
+              </button>
+            </div>
+          </article>
+        </div>
+        <ng-template #noNotifications>
+          <article class="data-row"><p>No notifications yet. Arrival and collection updates will appear here.</p></article>
+        </ng-template>
+      </div>
+    </section>
+
+    <section class="view" [class.active]="activeView === 'rewards'" *ngIf="allowedViews.includes('rewards')">
+      <div class="two-column rewards-layout">
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">Reward center</p>
+              <h3>Redeem incentives using eco points</h3>
+            </div>
+          </div>
+          <div class="reward-grid" *ngIf="visibleRewards.length; else noRewards">
+            <article class="reward-card" *ngFor="let reward of visibleRewards">
+              <div class="row-top">
+                <strong>{{ reward.title }}</strong>
+                <span class="status-chip">{{ reward.pointsCost }} pts</span>
+              </div>
+              <p>{{ reward.description }}</p>
+              <div class="row-meta">
+                <p>{{ reward.partner }}</p>
+                <p>{{ reward.stock }} remaining</p>
+              </div>
+              <button class="primary-btn" type="button" [disabled]="!canRedeem(reward)" (click)="redeemReward(reward)">
+                Redeem reward
+              </button>
+            </article>
+          </div>
+          <ng-template #noRewards>
+            <article class="data-row"><p>No rewards available for this account.</p></article>
+          </ng-template>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">Claim history</p>
+              <h3>Recent redemptions</h3>
+            </div>
+          </div>
+          <div class="table-list" *ngIf="visibleRedemptions.length; else noRedemptions">
+            <article class="data-row" *ngFor="let redemption of visibleRedemptions">
+              <div class="row-top">
+                <strong>{{ redemption.rewardTitle }}</strong>
+                <span class="status-chip">{{ redemption.status }}</span>
+              </div>
+              <div class="row-meta">
+                <p>{{ redemption.userName }}</p>
+                <p>{{ redemption.pointsSpent }} pts</p>
+              </div>
+              <p class="muted">{{ formatDateTime(redemption.redeemedAt) }}</p>
+            </article>
+          </div>
+          <ng-template #noRedemptions>
+            <article class="data-row"><p>No reward claims yet.</p></article>
+          </ng-template>
+        </article>
+      </div>
+    </section>
+
+    <section class="view" [class.active]="activeView === 'analytics'">
+      <div class="two-column">
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">Waste profile</p>
+              <h3>Waste by type</h3>
+            </div>
+          </div>
+          <div class="chart-bars" *ngIf="wasteByType.length; else noWasteChart">
+            <div class="chart-row" *ngFor="let item of wasteByType">
+              <div class="chart-label">
+                <span>{{ titleCase(item.label) }}</span>
+                <span>{{ item.value }} kg</span>
+              </div>
+              <div class="chart-track"><span [style.width]="getChartWidth(item)"></span></div>
+            </div>
+          </div>
+          <ng-template #noWasteChart>
+            <article class="data-row"><p>No waste data yet.</p></article>
+          </ng-template>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">Leaderboard</p>
+              <h3>Top contributors by points</h3>
+            </div>
+          </div>
+          <div class="leaderboard" *ngIf="leaderboard.length; else noLeaderboard">
+            <article class="leader-row" *ngFor="let leader of leaderboard; let index = index">
+              <div class="row-top">
+                <span class="rank-badge">{{ index + 1 }}</span>
+                <div>
+                  <strong>{{ leader.name }}</strong>
+                  <p class="muted">{{ leader.role }} - {{ leader.barangay }}</p>
+                </div>
+              </div>
+              <strong>{{ leader.points }} pts</strong>
+            </article>
+          </div>
+          <ng-template #noLeaderboard>
+            <article class="data-row"><p>No leaderboard data yet.</p></article>
+          </ng-template>
+        </article>
+      </div>
+    </section>
+
+    <section class="view" [class.active]="activeView === 'users'" *ngIf="allowedViews.includes('users')">
+      <div class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="section-kicker">System users</p>
+            <h3>Resident accounts, points, and authority levels</h3>
+          </div>
+        </div>
+
+        <div class="account-profile-grid" *ngIf="visibleUsers.length; else noUsers">
+          <article class="account-profile-card" *ngFor="let item of visibleUsers">
+            <div class="account-profile-head">
+              <div class="profile-avatar small">{{ getUserInitials(item) }}</div>
+              <div>
+                <strong>{{ item.name }}</strong>
+                <p class="muted">&#64;{{ item.username }}</p>
+              </div>
+              <span class="authority-badge compact">{{ item.role }}</span>
+            </div>
+
+            <p class="profile-summary">{{ getAuthorityFor(item.role).description }}</p>
+
+            <div class="mini-stat-grid">
+              <div *ngFor="let stat of getAccountStats(item)">
+                <span>{{ stat.label }}</span>
+                <strong>{{ stat.value }}</strong>
+              </div>
+            </div>
+
+            <div class="authority-list compact-list">
+              <div class="authority-item" *ngFor="let permission of getAuthorityFor(item.role).permissions.slice(0, 3)">
+                <span class="check-dot">✓</span>
+                <p>{{ permission }}</p>
+              </div>
+            </div>
+
+            <p class="muted">{{ item.barangay }}</p>
+          </article>
+        </div>
+        <ng-template #noUsers>
+          <article class="data-row"><p>No users found.</p></article>
+        </ng-template>
+      </div>
+    </section>
+  </section>
+</main>

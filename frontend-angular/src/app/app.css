@@ -1,0 +1,16 @@
+﻿:host {
+  display: block;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f1f4ef 0%, #e5ebdc 100%);
+}
+
+.offline-banner {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 10px 16px;
+  background: #fff1d6;
+  color: #5c4216;
+  text-align: center;
+  font: 600 0.9rem/1.4 system-ui, sans-serif;
+}
